@@ -47,3 +47,12 @@ jobs:
           context: ./meshteam_relay
           platforms: linux/amd64,linux/arm64
           push: false
+      - name: Load HA image for asset smoke test
+        uses: docker/build-push-action@v6
+        with:
+          context: ./meshteam_relay
+          platforms: linux/amd64
+          load: true
+          tags: meshteam-ha:test
+      - name: Verify dashboard assets inside image
+        run: docker run --rm --entrypoint node meshteam-ha:test -e "for (const file of ['ha/static/logo.svg','ha/static/app.js','ha/static/i18n.js','src/multi-server.mjs']) require('node:fs').readFileSync(file); console.log('Runtime assets present')"

@@ -1,7 +1,7 @@
 {
   "version": "0.1.5",
   "files": {
-    ".dockerignore": "25c10e4942f10afb8b79bc53587cd24fb76736f0b4b7b2f66659b6ba0d98ad0f",
+    ".dockerignore": "a5ce3b2ff77fa2d111b5e090581854b8e505eb73aac7c490b075a3e24967987d",
     "CHANGELOG.md": "e423ec7541f26ec43cc6a0c1baf63521ac4f42860a96e73686869e7e75aad39d",
     "DOCS.md": "e2d0ba3e147271441894bf3564e776f634372cab854668a984ef88add9de5ccd",
     "Dockerfile": "d9d0c22c9e4a7d7e6218d27e894a929d44f2d63e360ef55ac5dcf46c26577177",
