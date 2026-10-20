@@ -1,0 +1,12 @@
+configuration:
+  public_origin:
+    name: Public relay address
+    description: HTTPS origin reachable by the phones, e.g. https://relay.example.com. Leave blank until your reverse proxy and certificate are ready. This prefills setup; it does not configure DNS or TLS.
+  group_name:
+    name: Group name
+    description: Suggested name when creating the first group. Existing groups are not renamed by changing this option.
+  owner_name:
+    name: First owner's name
+    description: Suggested name for the first phone enrolled by the private owner QR code.
+network:
+  8788/tcp: Relay upstream for a trusted HTTPS reverse proxy. Keep disabled unless needed; never forward this cleartext port to the Internet.

@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+.env
+data
+dist
+meshteam_relay
+*.key
+*.pem
+owner.svg

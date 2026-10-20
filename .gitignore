@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+data/
+*.revoked
+*.pem
+*.key
+owner.svg
+*.log
+dist/
+.DS_Store

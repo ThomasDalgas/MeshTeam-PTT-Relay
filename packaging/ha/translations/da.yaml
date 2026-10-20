@@ -1,0 +1,12 @@
+configuration:
+  public_origin:
+    name: Relæets adresse
+    description: HTTPS-adresse som telefonerne kan nå, fx https://relay.example.com. Lad feltet være tomt indtil reverse proxy og certifikat er klar. Feltet udfylder kun opsætningen; det opretter ikke DNS eller TLS.
+  group_name:
+    name: Gruppenavn
+    description: Foreslået navn ved oprettelse af den første gruppe. Eksisterende grupper omdøbes ikke ved at ændre denne indstilling.
+  owner_name:
+    name: Første ejers navn
+    description: Foreslået navn på den første telefon, der tilmeldes via ejerens private QR-kode.
+network:
+  8788/tcp: Relæport til en betroet HTTPS reverse proxy. Behold deaktiveret medmindre den er nødvendig; videresend aldrig denne ukrypterede port til internettet.

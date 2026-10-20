@@ -1,0 +1,32 @@
+{
+  "version": "0.1.5",
+  "files": {
+    ".dockerignore": "25c10e4942f10afb8b79bc53587cd24fb76736f0b4b7b2f66659b6ba0d98ad0f",
+    "CHANGELOG.md": "e423ec7541f26ec43cc6a0c1baf63521ac4f42860a96e73686869e7e75aad39d",
+    "DOCS.md": "e2d0ba3e147271441894bf3564e776f634372cab854668a984ef88add9de5ccd",
+    "Dockerfile": "d9d0c22c9e4a7d7e6218d27e894a929d44f2d63e360ef55ac5dcf46c26577177",
+    "LICENSE": "e857c73cc49b5bec5f9f2cd03f6dcfe591ce347dbeb5f92267756bc01abbbd6f",
+    "config.yaml": "55f51b6f3059881ee08cbb9c70d682f8d0b910a5f690684cb67c7ec34f3fe0fb",
+    "entrypoint.sh": "7e7830f228367430832a1d247b4ac0de856b539a640093b2173461f0d2433d21",
+    "ha/admin.mjs": "f3563e208f1efa7051095beb8a5c80b510c038c4abd515dd7eba5173d5052a71",
+    "ha/launcher.mjs": "5097191acd5bbcbbbdf15dfe5fe295c85810d004278cd1a05def90015287e280",
+    "ha/main.mjs": "86bd2162991419096b7e73cb251279731b0a031019eca1e42f6694b3c970263f",
+    "ha/static/app.js": "062db42d78680afc903e4e53a9258d5d6730aaddd78af4e945749aabca4e003b",
+    "ha/static/i18n.js": "7c8211d02672bdb82c9df4e5c115420eea099be9e8a79f7b5f765bb0b3a1e020",
+    "ha/static/index.html": "ddfced9a31071df6ef82ca57bd5960a981b871810c2d5f5e38061bfd685bb2d0",
+    "ha/static/logo.svg": "c45a2c9b8204d132bce86a0f77690b084bd83763768b6d5451e96a3de18c1d62",
+    "ha/static/style.css": "371514c6d72588a68ff986c0a9a16b4076f6b50c44fc4433f457263f19cba141",
+    "ha/tls.mjs": "6cebb0bf7f621f3ce00aec9589a26ad4be1aad08ee7ebb757005b1c3aa8f0439",
+    "package-lock.json": "023f7db8a04856bce86c92a24fd24a01eadea397cdc97215b0c9152f6fce7f0f",
+    "package.json": "ad72a2d10f3da47b79ee841e2024daeaa0c762e831b201027cbd2c982cf078d2",
+    "src/cli.mjs": "b073fc293fdb1f954f87cc90fdae17c10ab3f8954c411263ef0d504fe400bc6a",
+    "src/main.mjs": "75fef7e507a70f3a9de008a6a3116d26f1117a79ec4e4d608550c57d50050081",
+    "src/multi-server.mjs": "6346228fead97f18ba72a364cd77994a9064e3b505419f0b5505cf2ea7b39099",
+    "src/registry.mjs": "4bb6208d376ae7443fe295f333e8919547930fbd68ccaa71c9f074beaec7eda6",
+    "src/room.mjs": "932fdd6b487f2364d4e9965fa1a85059e4ac12fa80a59a87860850d1aa0bc671",
+    "src/server.mjs": "b95f66d2cfed3b5dc244b26e442618dc57213d40b030469a00dea64e6edbaeeb",
+    "src/store.mjs": "581ea69f6a53b687e39cae7307b827cf50ab59ec4ce2bd4ea642ddc5f829a25b",
+    "translations/da.yaml": "3ed56adc4e115598f4136ae2f359e79c9bdeb5edbf93189566d40d91eaf25784",
+    "translations/en.yaml": "de5e591ffb9c55ec7c76c75a61e21a5085ff7a8ca3a5d7d6949cbb8fc500e147"
+  }
+}
