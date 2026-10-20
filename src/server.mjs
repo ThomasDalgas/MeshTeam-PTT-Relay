@@ -50,14 +50,19 @@ export function createRelay({store,now=Date.now,heartbeatMs=15000,mono=()=>perfo
     try{
       if(closing||!rate('upgrade:'+req.socket.remoteAddress,60))throw Error('Unavailable');
       const member=store.auth(bearer(req));
-      if(req.url!=='/ptt'||req.headers['x-ptt-protocol']!=='3'||req.headers.origin||!member||sockets.has(member.id))throw Error('Unauthorized');
+      if(req.url!=='/ptt'||req.headers['x-ptt-protocol']!=='3'||req.headers.origin||!member)throw Error('Unauthorized');
       wss.handleUpgrade(req,socket,head,ws=>{
+        // An authenticated reconnect supersedes its own stale TCP connection.
+        // Remove it first so late close/message callbacks cannot affect the new session.
+        const previous=sockets.get(member.id);
+        if(previous){sockets.delete(member.id);room.leave(member.id);previous.terminate();}
         const stats={connectedAt:now(),connectedMono:mono(),lastSeenAt:now(),lastSeenMono:mono(),rttMs:null,rttMono:null,receivedBytes:0,sentBytes:0};
         connectionStats.set(member.id,stats);
         sockets.set(member.id,ws);ws.authToken=bearer(req);ws.extendedLive=req.headers['x-ptt-extended-live']==='1';ws.alive=true;ws.pingSerial=0;
         ws.on('pong',payload=>{ws.alive=true;seen(stats);if(ws.pendingPing&&payload.equals(ws.pendingPing.payload)){stats.rttMs=Math.max(0,mono()-ws.pendingPing.at);stats.rttMono=mono();ws.pendingPing=null;}});ws.on('error',()=>{});
         ws.on('close',()=>{if(sockets.get(member.id)!==ws)return;sockets.delete(member.id);ws.pendingPing=null;try{room.leave(member.id);}catch{}});
         ws.on('message',raw=>{
+          if(sockets.get(member.id)!==ws)return;
           try{
             seen(stats);add(stats,'receivedBytes',raw.length);add(traffic,'receivedBytes',raw.length);
             if(!rate('ws:'+member.id,80,1000))throw Error('Rate limit');
