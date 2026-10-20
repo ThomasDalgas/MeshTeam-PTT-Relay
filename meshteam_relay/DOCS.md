@@ -7,7 +7,7 @@ MeshTeam PTT Relay forbinder telefoner over internettet, også når et gæstenet
 Pakken understøtter Home Assistant OS på 64-bit Raspberry Pi (`aarch64`) og x86-64 (`amd64`). Tilføj dette repository under **Indstillinger → Apps → Installer app → Repositories**:
 
 ```text
-https://github.com/ThomasDalgas/MeshTeam-PTT-Relay
+https://github.com/funkoneinc/MeshTeam-PTT-Relay
 ```
 
 Installer **MeshTeam PTT Relay**, start appen og åbn webinterfacet som Home Assistant-administrator. Første build kræver internet til container- og pakkeregistre. Der kræves ingen Home Assistant-adgangstoken i relæet.

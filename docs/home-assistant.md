@@ -5,7 +5,7 @@ Requires Home Assistant OS/Supervisor with apps (formerly add-ons), on AMD64 or 
 1. Open **Settings → Apps → Install app** (older versions: Add-on Store).
 2. Open the store menu → **Repositories**, add:
 
-   `https://github.com/ThomasDalgas/MeshTeam-PTT-Relay`
+   `https://github.com/funkoneinc/MeshTeam-PTT-Relay`
 
 3. Find **MeshTeam PTT Relay** and install it. The first install builds the image locally and may take a few minutes.
 4. Start it and open the web UI. Follow the built-in installation guide to configure a domain, HTTPS and router access.

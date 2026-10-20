@@ -34,4 +34,4 @@ schema:
   public_origin: "str(0,512)"
   group_name: "str(1,64)"
   owner_name: "str(1,64)"
-url: https://github.com/ThomasDalgas/MeshTeam-PTT-Relay
+url: https://github.com/funkoneinc/MeshTeam-PTT-Relay

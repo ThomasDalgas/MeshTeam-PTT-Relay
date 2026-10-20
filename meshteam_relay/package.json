@@ -19,6 +19,6 @@
   "description": "Self-hosted encrypted group voice relay for MeshTeam PTT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ThomasDalgas/MeshTeam-PTT-Relay.git"
+    "url": "https://github.com/funkoneinc/MeshTeam-PTT-Relay.git"
   }
 }

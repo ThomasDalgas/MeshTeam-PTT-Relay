@@ -40,10 +40,10 @@ This is an HTTPS/WebSocket relay, **not a VPN**, and does not automatically brid
 Choose the platform guide above. Home Assistant users can add this repository:
 
 ```text
-https://github.com/ThomasDalgas/MeshTeam-PTT-Relay
+https://github.com/funkoneinc/MeshTeam-PTT-Relay
 ```
 
-[Add repository to Home Assistant](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FThomasDalgas%2FMeshTeam-PTT-Relay)
+[Add repository to Home Assistant](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Ffunkoneinc%2FMeshTeam-PTT-Relay)
 
 The standalone Docker setup uses the same relay core. It creates a persistent membership volume and prints a private owner QR. Never publish invitation links or QR images. The owner joins first, then generates invitations for other phones from the app.
 
