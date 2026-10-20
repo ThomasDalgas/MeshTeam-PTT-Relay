@@ -112,7 +112,7 @@ export function createHAApp({file, defaults = {}, relayHost = '0.0.0.0', relayPo
         if (pruneBootstrap(id) !== invitation) { json(res, 410, {error: 'Invitationen er udløbet eller brugt.'}); return; }
         json(res, 200, {uri, qr, expiresAt: invitation.expiresAt}); return;
       }
-      if (req.method !== 'POST' || !['/api/setup', '/api/groups', '/api/renew', '/api/revoke', '/api/reset'].includes(path)) {
+      if (req.method !== 'POST' || !['/api/review-group', '/api/setup', '/api/groups', '/api/renew', '/api/revoke', '/api/reset'].includes(path)) {
         json(res, 404, {error: 'Siden findes ikke.'}); req.resume(); return;
       }
       const supplied = req.headers['x-meshteam-csrf'];
@@ -122,6 +122,17 @@ export function createHAApp({file, defaults = {}, relayHost = '0.0.0.0', relayPo
       }
       const input = await body(req);
       if(starting){json(res,409,{error:'Operation in progress'});return;}
+      if(path==='/api/review-group'){
+        if(input.confirm!==true||!registry.origin)throw Error('Existing HTTPS relay and confirmation required');
+        if([...registry.stores.values()].some(s=>s.state.reviewOnly))throw Error('Review group already exists');
+        starting=true;
+        try{
+          const result=registry.createReview({origin:registry.origin,name:'Google Play Review — demo only'});
+          if(relay)relay.add(result.store);else await startRelay();
+          json(res,201,{groupId:result.store.state.groupId,origin:result.origin,invites:result.invites});
+        }finally{starting=false;}
+        return;
+      }
       if (path === '/api/setup'||path==='/api/groups') {
         if (path==='/api/setup'&&registry.stores.size) { json(res, 409, {error: 'Gruppen er allerede oprettet. Den eksisterende gruppe bevares.'}); return; }
         if (!validOrigin(input.origin) || !validName(input.name) || !validName(input.owner)) throw Error('Invalid setup');
@@ -151,6 +162,7 @@ export function createHAApp({file, defaults = {}, relayHost = '0.0.0.0', relayPo
         return;
       }
       if (path === '/api/renew') {
+        if(store.state.reviewOnly)throw Error('Review groups do not use owner invitations');
         const state = store.load();
         if (state.members.length) { json(res, 409, {error: 'Ejeren er allerede tilmeldt. Lav deltagerinvitationer på ejerens telefon.'}); return; }
         const owner = state.invites.find(i => i.owner)?.name;

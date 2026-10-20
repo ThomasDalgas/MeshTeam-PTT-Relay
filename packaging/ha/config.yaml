@@ -1,5 +1,5 @@
 name: MeshTeam PTT Relay
-version: "0.1.5"
+version: "0.1.6"
 slug: meshteam_relay
 description: Private encrypted voice relay with QR enrollment and temporary deferred delivery
 arch:

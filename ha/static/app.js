@@ -103,3 +103,16 @@ $('language').onchange=()=>{setRelayLanguage($('language').value);for(const row 
 $('selectedGroup').onchange=()=>{if(busy)return;selectedGroup=$('selectedGroup').value;selectionEpoch++;hideQr();$('resetName').value='';notice('');for(const row of rows.values())row.el.remove();rows.clear();stale();refresh().catch(stale);};
 $('newGroup').onclick=()=>{creating=true;hideQr();$('name').value='';$('owner').value='';if(lastStatus)render(lastStatus);$('name').focus();};
 $('cancelSetup').onclick=()=>{creating=false;if(lastStatus)render(lastStatus);};
+
+$('createReviewGroup').onclick=()=>{
+ if(!confirm(T("Create a separate demo group with six reusable review credentials? Anyone with an invitation can reuse its slot. Do not use it for private conversations.")))return;
+ action(async()=>{
+  const keyBytes=new Uint8Array(32);crypto.getRandomValues(keyBytes);
+  const key=btoa(String.fromCharCode(...keyBytes)).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');keyBytes.fill(0);
+  const result=await request('api/review-group',{confirm:true});
+  const values=result.invites.map((invite,i)=>'Phone '+(i+1)+'\nmeshteam://relay?v=1&server='+encodeURIComponent(result.origin)+'&invite='+invite+'#key='+key);
+  $('reviewInvitations').value=values.join('\n\n');$('reviewInvitations').hidden=false;
+  selectedGroup=result.groupId;selectionEpoch++;creating=false;
+  notice(T("Review group created. Save the private invitations now."));
+ });
+};

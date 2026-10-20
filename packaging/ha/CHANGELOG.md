@@ -1,3 +1,8 @@
+## 0.1.6
+
+- Optional isolated review groups with six reusable, revocable demo slots.
+- Ordinary invitations remain single-use and expire after 15 minutes.
+
 ## 0.1.5
 
 - First standalone public MIT release and installable Home Assistant repository.

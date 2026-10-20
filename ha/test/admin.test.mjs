@@ -137,3 +137,17 @@ test('HA selection scopes QR, renewal and reset while other groups stay running'
   assert.equal((await json(f,'/api/status?group='+aid)).status,404);
  }finally{await f.close();}
 });
+test('review provisioning requires ingress CSRF and creates only one isolated demo group',async()=>{
+ const f=await fixture();try{
+  const csrf=await initialize(f);
+  assert.equal((await json(f,'/api/review-group',{data:{confirm:true}})).status,403);
+  assert.equal((await json(f,'/api/review-group',{csrf,data:{}})).status,400);
+  const r=await json(f,'/api/review-group',{csrf,data:{confirm:true}});
+  assert.equal(r.status,201);assert.equal(r.body.invites.length,6);
+  const status=await json(f,'/api/status');assert.equal(status.body.groups.length,2);
+  assert.ok(!JSON.stringify(status.body).includes(r.body.invites[0]));
+  assert.equal((await json(f,'/api/review-group',{csrf,data:{confirm:true}})).status,400);
+  assert.equal((await json(f,'/api/renew?group='+r.body.groupId,{csrf,data:{}})).status,400);
+  assert.equal(new Store(f.file).state.groupName,'Team');
+ }finally{await f.close();}
+});

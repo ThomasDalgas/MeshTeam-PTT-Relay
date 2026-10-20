@@ -12,6 +12,13 @@ export class Registry {
   for(const path of files){const store=new Store(path,now);if(this.stores.has(store.state.groupId))throw Error('Duplicate group');this.stores.set(store.state.groupId,store);}
   if(new Set([...this.stores.values()].map(s=>s.state.origin)).size>1)throw Error('Groups must share one HTTPS origin');
  }
+ createReview({origin,name}){
+  const result=this.create({origin,name,owner:'Review setup'}),s=result.store.state;
+  const invites=Array.from({length:6},()=>randomBytes(32).toString('base64url'));
+  s.reviewOnly=true;s.invites=[];
+  s.reviewSlots=invites.map((invite,i)=>({hash:hash(invite),name:'Reviewer '+(i+1),disabled:false}));
+  result.store.save();return {store:result.store,invites,origin:s.origin};
+ }
  get origin(){return this.stores.values().next().value?.state.origin??'';}
  create(options){
   if(this.stores.size>=MAX_GROUPS)throw Error('Group capacity reached');
@@ -24,7 +31,7 @@ export class Registry {
  forToken(token){return [...this.stores.values()].find(s=>s.auth(token))??null;}
  forInvite(invite){
   if(typeof invite!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(invite))return null;
-  const digest=hash(invite);return [...this.stores.values()].find(s=>s.load().invites.some(i=>i.hash===digest&&i.expiresAt>this.now()))??null;
+  const digest=hash(invite);return [...this.stores.values()].find(s=>((s.load().reviewOnly===true&&s.state.reviewSlots?.some(i=>!i.disabled&&i.hash===digest))||s.state.invites.some(i=>i.hash===digest&&i.expiresAt>this.now())))??null;
  }
  remove(id){const store=this.stores.get(id);if(!store)throw Error('Unknown group');unlinkSync(store.file);if(existsSync(store.file+'.revoked'))unlinkSync(store.file+'.revoked');this.stores.delete(id);}
 }

@@ -23,6 +23,7 @@ export class Store {
     const text=readFileSync(this.file,'utf8');if(text.length>131072)throw Error('Configuration too large');
     const s=JSON.parse(text);
     if(s.version!==1||!validOrigin(s.origin)||!Array.isArray(s.members)||s.members.length>128||!Array.isArray(s.invites)||s.invites.length>16||!/^[a-f0-9]{16}$/.test(s.groupId))throw Error('Invalid relay configuration');
+    if(s.reviewOnly===true&&(!Array.isArray(s.reviewSlots)||s.reviewSlots.length!==6||s.reviewSlots.some(x=>!x||!/^[a-f0-9]{64}$/.test(x.hash)||!validName(x.name))))throw Error('Invalid review configuration');
     const revocations=this.file+'.revoked';
     if(existsSync(revocations)){
       const text=readFileSync(revocations,'utf8');if(text.length>4096)throw Error('Invalid revocations');
@@ -42,6 +43,8 @@ export class Store {
     if(typeof invite!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(invite)||typeof deviceKey!=='string'||deviceKey.length>256)throw Error('Invalid enrollment');
     let key;try {key=createPublicKey({key:Buffer.from(deviceKey,'base64'),type:'spki',format:'der'});}catch{throw Error('Invalid device key');}
     if(key.asymmetricKeyType!=='ec'||key.asymmetricKeyDetails.namedCurve!=='prime256v1'||key.export({format:'der',type:'spki'}).toString('base64')!==deviceKey)throw Error('Use a P-256 device public key');
+    const state=this.load();
+    if(state.reviewOnly===true)return this.enrollReview(invite,deviceKey);
     const s=this.load(),inv=s.invites.find(i=>i.hash===hash(invite)&&i.expiresAt>this.now());
     if(!inv)throw Error('Invitation unavailable');
     if(inv.claimed){
@@ -55,6 +58,17 @@ export class Store {
     const token=secret(),member={id:createHash('sha256').update(Buffer.from(deviceKey,'base64')).digest('hex').slice(0,16),name:inv.name,owner:!!inv.owner,deviceKey,tokenHash:hash(token),revoked:false};
     s.members.push(member);inv.claimed=member.id;inv.nonceHash=hash(enrollmentNonce);s.invites=s.invites.filter(i=>i.expiresAt>this.now());this.save();
     return this.enrollment(member,token);
+  }
+  enrollReview(invite,deviceKey){
+    const s=this.state,slot=s.reviewSlots.find(x=>x.hash===hash(invite));
+    if(!slot||slot.disabled)throw Error('Review slot unavailable');
+    const id=hash(Buffer.from(deviceKey,'base64')).slice(0,16);
+    if(s.members.some(m=>m.id===id&&m.id!==slot.member))throw Error('Device already occupies another slot');
+    // Reusing a slot replaces only that slot's membership and bearer token.
+    // Review data is disposable; no normal group can enable this path via enrollment.
+    s.members=s.members.filter(m=>m.id!==slot.member);
+    const token=secret(),member={id,name:slot.name,owner:false,deviceKey,tokenHash:hash(token),revoked:false};
+    slot.member=id;s.members.push(member);this.save();return this.enrollment(member,token);
   }
   enrollment(member,token){const s=this.state;return {token,id:member.id,owner:member.owner,groupId:s.groupId,groupName:s.groupName,participants:s.members.filter(m=>!m.revoked).map(({id,name})=>({id,name}))};}
   invite(token,name){
@@ -72,6 +86,7 @@ export class Store {
   }
   revoke(id){
     const s=this.load(),m=s.members.find(m=>m.id===id);if(!m)throw Error('Unknown member');m.revoked=true;
+    if(s.reviewOnly===true){for(const slot of s.reviewSlots)if(slot.member===id)slot.disabled=true;this.save();}
     // Separate fail-closed tombstones cannot be overwritten by a concurrent enrollment save.
     const file=this.file+'.revoked',revoked=s.members.filter(m=>m.revoked).map(m=>m.id);
     const tmp=file+'.tmp-'+randomBytes(6).toString('hex');writeFileSync(tmp,JSON.stringify(revoked),{mode:0o600,flag:'wx'});renameSync(tmp,file);
